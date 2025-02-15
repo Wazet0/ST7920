@@ -7,14 +7,15 @@ SYNC_CHAR = const(0b11111_00_0) #11111_RW-RS_0
 INIT = const((0b0011_0000, 0b0000_1100, 0b0011_0100, 0b0011_0110)) #basic, display control, extend, extend
 WIDTH = const(128)
 HEIGHT = const(64)
+
 class ST7920(framebuf.FrameBuffer):
     def __init__(self, spi, cs, rst):
         self.spi = spi
         self.cs = cs
         self.rst = rst
+        self.buf_size = WIDTH * HEIGHT // 8
         self.cs.init(Pin.OUT, 0)
         self.rst.init(Pin.OUT, 0)
-        self.buf_size = WIDTH * HEIGHT // 8
         
         self.buf = bytearray(self.buf_size)
         super().__init__(self.buf, WIDTH, HEIGHT, framebuf.MONO_HLSB)        
@@ -25,6 +26,7 @@ class ST7920(framebuf.FrameBuffer):
         self.rst.value(0)
         sleep_ms(100)
         self.rst.value(1)
+        
         for cmd in INIT:
             self.write(0, 0, cmd)
         self.clear()
