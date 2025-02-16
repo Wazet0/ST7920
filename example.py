@@ -10,7 +10,7 @@ def image():
         for b in data:
             buf.append(int(b, 2))
     return buf
-p = Pin(15, Pin.OUT)
+
 spi = SPI(2, baudrate=2_000_000)
 cs = Pin(34, Pin.OUT)
 rst = Pin(1, Pin.OUT, 1)
@@ -23,6 +23,5 @@ st.text("ST7920", 38, 32)
 st.show()
 st.fill(0)
 st.show()
-st.display_buf(image())
-
-p.value(0)
+st.load_buf(image())
+st.show()

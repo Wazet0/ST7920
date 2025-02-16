@@ -29,7 +29,8 @@ class ST7920(framebuf.FrameBuffer):
         
         for cmd in INIT:
             self.write(0, 0, cmd)
-        self.clear()
+        self.clear_buf()
+        self.show()
         self.cs.value(0)
     
     def write(self, rs, rw, data):
@@ -48,10 +49,16 @@ class ST7920(framebuf.FrameBuffer):
         self.write(1, 0, d1)
         self.write(1, 0, d2)
     
-    def clear(self):
-        self.display_buf(bytearray(self.buf_size))
+    def clear_buf(self):
+        self.load_buf(bytearray(self.buf_size))
         
-    def display_buf(self, buf):
+    def load_buf(self, buf):
+        for i in range(self.buf_size): self.buf[i] = buf[i]
+        
+    def get_buf(self):
+        return self.buf
+    
+    def show(self):
         self.cs.value(1)
         for i in range(0, self.buf_size, 2):
             y = i // 16
@@ -60,8 +67,5 @@ class ST7920(framebuf.FrameBuffer):
                 x += 8
                 y -= HEIGHT//2
             self.set_pos(x, y)
-            self.set_data(buf[i], buf[i+1])
+            self.set_data(self.buf[i], self.buf[i+1])
         self.cs.value(0)
-        
-    def show(self):
-        self.display_buf(self.buf)
