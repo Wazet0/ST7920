@@ -62,10 +62,10 @@ class ST7920(framebuf.FrameBuffer):
         self.cs.value(1)
         for i in range(0, self.buf_size, 2):
             y = i // 16
-            x = i // 2 - y*8
-            if y >= HEIGHT//2:
+            x = i // 2 - y * 8
+            if y >= HEIGHT // 2:
                 x += 8
-                y -= HEIGHT//2
+                y -= HEIGHT // 2
             self.set_pos(x, y)
             self.set_data(self.buf[i], self.buf[i+1])
         self.cs.value(0)
