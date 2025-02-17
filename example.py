@@ -12,8 +12,8 @@ def image():
     return buf
 
 spi = SPI(2, baudrate=2_000_000)
-cs = Pin(34, Pin.OUT)
-rst = Pin(1, Pin.OUT, 1)
+cs = Pin(34)
+rst = Pin(1)
 
 st = ST7920(spi, cs, rst)
 
