@@ -7,17 +7,17 @@ SYNC_CHAR = const(0b11111_00_0) #11111_RW-RS_0
 INIT = const((0b0011_0000, 0b0000_1100, 0b0011_0100, 0b0011_0110)) #basic, display control, extend, extend
 WIDTH = const(128)
 HEIGHT = const(64)
+FRAMEBUF_SIZE = const(WIDTH * HEIGHT // 8)
 
 class ST7920(framebuf.FrameBuffer):
     def __init__(self, spi, cs, rst):
         self.spi = spi
         self.cs = cs
         self.rst = rst
-        self.buf_size = WIDTH * HEIGHT // 8
         self.cs.init(Pin.OUT, 0)
         self.rst.init(Pin.OUT, 0)
         
-        self.buf = bytearray(self.buf_size)
+        self.buf = bytearray(FRAMEBUF_SIZE)
         super().__init__(self.buf, WIDTH, HEIGHT, framebuf.MONO_HLSB)        
         self.init()
         
@@ -50,17 +50,17 @@ class ST7920(framebuf.FrameBuffer):
         self.write(1, 0, d2)
     
     def clear_buf(self):
-        self.load_buf(bytearray(self.buf_size))
+        self.load_buf(bytearray(FRAMEBUF_SIZE))
         
     def load_buf(self, buf):
-        for i in range(self.buf_size): self.buf[i] = buf[i]
+        for i in range(FRAMEBUF_SIZE): self.buf[i] = buf[i]
         
     def get_buf(self):
         return self.buf
     
     def show(self):
         self.cs.value(1)
-        for i in range(0, self.buf_size, 2):
+        for i in range(0, FRAMEBUF_SIZE, 2):
             y = i // 16
             x = i // 2 - y * 8
             if y >= HEIGHT // 2:
