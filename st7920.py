@@ -54,10 +54,7 @@ class ST7920(framebuf.FrameBuffer):
         
     def load_buf(self, buf):
         for i in range(FRAMEBUF_SIZE): self.buf[i] = buf[i]
-        
-    def get_buf(self):
-        return self.buf
-    
+   
     def show(self):
         self.cs.value(1)
         for i in range(0, FRAMEBUF_SIZE, 2):
