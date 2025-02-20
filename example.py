@@ -1,5 +1,6 @@
 from machine import Pin, SPI
 from st7920 import ST7920
+from utime import sleep
 
 def image():
     buf = bytearray()
@@ -17,10 +18,10 @@ rst = Pin(1)
 
 st = ST7920(spi, cs, rst)
 
-p.value(1)
 st.rect(0, 0, 128, 64, 1)
 st.text("ST7920", 38, 32)
 st.show()
+sleep(3)
 st.fill(0)
 st.show()
 st.load_buf(image())
